@@ -26,7 +26,7 @@ function scrubEvents(events, from, to) {
     .filter(event => event.status !== 'cancelled')
     .filter(event => isAfter(new Date(event.start.dateTime), start) && isBefore(new Date(event.end.dateTime), end))
     .map(event => {
-      const isPublic = event?.organizer?.email && reg.test(event.organizer.email);
+      const isPublic = event && event.organizer && event.organizer.email && reg.test(event.organizer.email);
       return {
         public: isPublic,
         status: event.status,
