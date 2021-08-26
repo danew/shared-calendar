@@ -1,5 +1,5 @@
 import React from "react";
-import { add, addDays, format, startOfDay, getHours, getMinutes, getDay, startOfWeek } from "date-fns";
+import { add, addDays, format, getHours, getMinutes, getDay, startOfWeek } from "date-fns";
 import { useCalendar } from './CalendarContext';
 import "./calendar.css";
 
@@ -99,22 +99,12 @@ function WeekDays() {
   )
 }
 
-<div className="days">
-        <div className="filler" />
-        <div className="filler" />
-        <div className="day">Mon 4</div>
-        <div className="day">Tue 5</div>
-        <div className="day">Wed 6</div>
-        <div className="day">Thu 7</div>
-        <div className="day current">Fri 8</div>
-      </div>
-
 export function Calendar() {
   const { today, setOffset, offset } = useCalendar();
   return (
     <div className="container">
       <div className="header">
-        <button onClick={() => setOffset({ weeks: offset.weeks + 1 })}>Previous</button>
+        <button onClick={() => setOffset({ weeks: offset.weeks - 1 })}>Previous</button>
         <div className="title">{format(today, "MMMM")}</div>
         <button onClick={() => setOffset({ weeks: offset.weeks + 1 })}>Next</button>
       </div>
