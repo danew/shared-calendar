@@ -4,7 +4,7 @@ const defaultScopes = ['https://www.googleapis.com/auth/calendar.events.readonly
 
 const PrivateTest = process.env.EMAIL_PRIVATE_TEST;
 
-export async function authorize(serviceAccount, scopes = defaultScopes) {
+exports.authorize = async function authorize(serviceAccount, scopes = defaultScopes) {
   const jwtClient = new google.auth.JWT(serviceAccount.client_email, null, serviceAccount.private_key, scopes);
   return new Promise((res, rej) => {
     jwtClient.authorize((err) => {
@@ -31,7 +31,7 @@ function scrubEvents(events) {
   })
 }
 
-export async function getEvents(auth, calendarId, from, to){
+exports.getEvents = async function getEvents(auth, calendarId, from, to){
   const calendar = google.calendar({version: 'v3', auth });  
   return new Promise((res, rej) => {
     calendar.events.list({
@@ -50,7 +50,7 @@ export async function getEvents(auth, calendarId, from, to){
   });
 }
 
-export function getServiceAccount() {
+exports.getServiceAccount = function getServiceAccount() {
   try {
     return JSON.parse(process.env.SERVICE_ACCOUNT);
   } catch (e) {
