@@ -4,7 +4,7 @@ const CalendarId = process.env.CALENDAR_ID;
 
 exports.handler = async (event) => {
   const { from, to } = event.queryStringParameters;
-  if (!location || !description) {
+  if (!from || !to) {
     return {
       statusCode: 400,
     }
