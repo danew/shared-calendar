@@ -1,10 +1,14 @@
 import React from 'react'
+import { Calendar } from './components/Calendar';
+import { CalendarProvider } from './components/CalendarContext';
 import './App.css'
 
 function App() {
   return (
     <div className="App">
-      <p>Hello World</p>
+      <CalendarProvider>
+        <Calendar />
+      </CalendarProvider>
     </div>
   )
 }
