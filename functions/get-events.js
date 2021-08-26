@@ -1,29 +1,23 @@
-const fetch = require('node-fetch')
+const { authorize, getEvents, getServiceAccount } = require('../utils/calendar');
 
-const saveSearch = async (location, description, ip) => {
-}
+const CalendarId = process.env.CALENDAR_ID;
 
 exports.handler = async (event) => {
-  const { location, description } = event.queryStringParameters
+  const { from, to } = event.queryStringParameters;
   if (!location || !description) {
     return {
-      statusCode: 404,
+      statusCode: 400,
     }
   }
 
   try {
-    const params = new URLSearchParams()
-    params.set('location', location)
-    params.set('description', description)
-
-    const ip = event.identity && event.identity.sourceIP || null
-    saveSearch(location, description, ip)
-
-    const response = await fetch(`https://jobs.github.com/positions.json?${params}`)
-    const positions = await response.json()
+    const serviceAccount = getServiceAccount();
+    const client = await authorize(serviceAccount);
+    const events = await getEvents(client, CalendarId, from, to);
+    
     return {
       statusCode: 200,
-      body: JSON.stringify(positions),
+      body: JSON.stringify(events),
     }
   } catch (e) {
     console.log(e)
