@@ -1,3 +1,4 @@
+const { isBefore, isAfter } = require('date-fns');
 const { google } = require('googleapis');
 
 const defaultScopes = ['https://www.googleapis.com/auth/calendar.events.readonly'];
@@ -17,18 +18,23 @@ exports.authorize = async function authorize(serviceAccount, scopes = defaultSco
   });  
 }
 
-function scrubEvents(events) {
+function scrubEvents(events, from, to) {
   const reg = new RegExp(PrivateTest, 'i');
-  events.map(event => {
-    const isPublic = reg.test(event.organizer.email);
-    return {
-      public: isPublic,
-      status: event.status,
-      summary: isPublic ? event.summary : 'Private',
-      start: event.start,
-      end: event.end,
-    }
-  })
+  const start = new Date(from);
+  const end = new Date(to);
+  return events
+    .filter(event => event.status !== 'cancelled')
+    .filter(event => isAfter(new Date(event.start.dateTime), start) && isBefore(new Date(event.end.dateTime), end))
+    .map(event => {
+      const isPublic = event?.organizer?.email && reg.test(event.organizer.email);
+      return {
+        public: isPublic,
+        status: event.status,
+        summary: isPublic ? event.summary : 'Private',
+        start: event.start.dateTime,
+        end: event.end.dateTime,
+      }
+    });
 }
 
 exports.getEvents = async function getEvents(auth, calendarId, from, to){
@@ -36,14 +42,14 @@ exports.getEvents = async function getEvents(auth, calendarId, from, to){
   return new Promise((res, rej) => {
     calendar.events.list({
       calendarId,
-      orderBy: 'startTime',
       timeMin: from,
       timeMax: to,
     }, (err, resp) => {
       if (err) {
-        rej(err);
+        console.error(err);
+        rej('Failed to fetch events');
       } else {
-        const cleaned = scrubEvents(resp.data.items);
+        const cleaned = scrubEvents(resp.data.items, from, to);
         res(cleaned);
       }
     })
@@ -52,7 +58,11 @@ exports.getEvents = async function getEvents(auth, calendarId, from, to){
 
 exports.getServiceAccount = function getServiceAccount() {
   try {
-    return JSON.parse(process.env.SERVICE_ACCOUNT);
+    const base = JSON.parse(process.env.SERVICE_ACCOUNT);
+    return {
+      ...base,
+      private_key: base.private_key.replace(/\\n/gm, '\n')
+    }
   } catch (e) {
     return undefined;
   }

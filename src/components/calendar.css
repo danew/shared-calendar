@@ -78,6 +78,9 @@
   font-weight: bold;
   font-size: 80%;
   border: solid 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .weekend {

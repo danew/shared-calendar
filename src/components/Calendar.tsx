@@ -1,22 +1,8 @@
 import React from "react";
 import { add, addDays, format, getHours, getMinutes, getDay, startOfWeek } from "date-fns";
 import { useCalendar } from './CalendarContext';
+import { Events } from './Events';
 import "./calendar.css";
-
-interface EventsProps {
-
-}
-
-function Events({}: EventsProps) {
-  return (
-    <>
-      <div className="event" style={{ gridColumn: 4, gridRow: '3/span 1', backgroundColor: '#b3e1f7', borderColor: '#81cdf2' }}>Integrations</div>
-      <div className="event" style={{ gridColumn: 4, gridRow: '4/span 1', backgroundColor: '#b3e1f7', borderColor: '#81cdf2' }}>RPM Dashboard - Perlogix</div>
-      <div className="event" style={{ gridColumn: 5, gridRow: '3/span 1', backgroundColor: '#f7b3b3', borderColor: '#f28181' }}>Private</div>
-      <div className="event" style={{ gridColumn: 6, gridRow: '3/span 1', backgroundColor: '#b3e1f7', borderColor: '#81cdf2' }}>Integrations</div>
-    </>
-  )
-}
 
 function CurrentTime() {
   const { time, startHour } = useCalendar();
@@ -101,6 +87,7 @@ function WeekDays() {
 
 export function Calendar() {
   const { today, setOffset, offset } = useCalendar();
+
   return (
     <div className="container">
       <div className="header">

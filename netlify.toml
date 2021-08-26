@@ -5,6 +5,12 @@
 
 [dev]
   command = "yarn dev"
+  autoLaunch = false
+
+[[redirects]]
+  force = true
+  from = '/api/*'
+  to = '/.netlify/functions/:splat'
 
 [[redirects]]
   from = "/*"

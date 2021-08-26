@@ -12,9 +12,12 @@ exports.handler = async (event) => {
 
   try {
     const serviceAccount = getServiceAccount();
+    if (!serviceAccount) {
+      throw new Error('No service account');
+    }
     const client = await authorize(serviceAccount);
     const events = await getEvents(client, CalendarId, from, to);
-    
+
     return {
       statusCode: 200,
       body: JSON.stringify(events),
