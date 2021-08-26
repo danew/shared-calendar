@@ -1,4 +1,4 @@
-const { google } = requre('googleapis');
+const { google } = require('googleapis');
 
 const defaultScopes = ['https://www.googleapis.com/auth/calendar.events.readonly'];
 
